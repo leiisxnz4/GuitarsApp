@@ -40,6 +40,7 @@ const createCard = (guitar) => {
                     <p>${guitar.descripcion}</p>
                     <p class="fw-black text-primary fs-3">$${guitar.precio}</p>
                     <button 
+                        data-id="${guitar.id}"
                         type="button"
                         class="btn btn-dark w-100 "
                     >Agregar al Carrito</button>
@@ -47,6 +48,24 @@ const createCard = (guitar) => {
     div.innerHTML = html;
     return div
 }
+
+const buttonClicked = (e) => {
+    if (e.target.classList.contains('btn')){
+        const dataId = e.target.getAttribute('data-id')
+    console.log(db [Number(dataId) - 1])
+    }
+}
+
+/*
+    const idGuitar = 
+    const indexdb= db.findIndex(guitar => guitar.id === Number (idGuitar))
+    carrito.push({...db[indexdb], 
+        cantidad: 1
+    })
+    console.log(carrito)
+    }
+}
+*/
 
 /*
 const createDiv = (guitar) => {
@@ -74,18 +93,4 @@ db.forEach( guitar => {
     divContainer.appendChild(createCard(guitar) );
 })
 
-/*
-const cardClicked = (e) => {
-    if (e.target.classList.contains('btn')){
-    // console.log('Le diste al botón', e.target.getAttribute('data'))}
-    const idGuitar = e.target.getAttribute('data-id')
-    const indexdb= db.findIndex(guitar => guitar.id === Number (idGuitar))
-    carrito.push({...db[indexdb], 
-        cantidad: 1
-    })
-    console.log(carrito)
-    }
-}
-
-divContainer.addEventListener('Click', cardClicked)
-*/
+divContainer.addEventListener('click', buttonClicked)
