@@ -26,9 +26,77 @@ db.forEach((guitar) =>
 
 import { db } from './guitarras.js';
 
-const divContainer = document.querySelector('main div');
-// const carrito = []
+const carrito = []
 
+const divContainer = document.querySelector('main div');
+const carritocontainer = document.querySelector('#carrito');
+
+
+const createCart = (carrito) => {
+    console.log(carrito)
+    const p = document.createElement('p')
+    p.className = 'text-center'
+    p.inertertext = 'El carrito está vacío'
+    const div = document.createElement('div')
+    let total = 0
+    let html = `<table class="w-100 table">
+                            <thead>
+                                <tr>
+                                    <th>Imagen</th>
+                                    <th>Nombre</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>`
+                            carrito.forEach(g =>{
+                                total += g.precio * g.cantidad
+                                html += `<tr>
+                                    <td>
+                                        <img class="img-fluid" src="./img/${ g.imagen }.jpg" alt="imagen guitarra">
+                                    </td>
+                                    <td>SRV</td>
+                                    <td class="fw-bold">
+                                            $${ g.precio}
+                                    </td>
+                                    <td class="flex align-items-start gap-4">
+                                        <button
+                                            type="button"
+                                            class="btn btn-dark"
+                                        >-</button>
+                                            1
+                                        <button
+                                            type="button"
+                                            class="btn btn-dark"
+                                        >+</button>
+                                        ${ g.cantidad}
+                                    </td>
+                                    <td>
+                                        <button
+                                            class="btn btn-danger"
+                                            type="button"
+                                        >X</button>
+                                    </td>
+                                </tr>`
+
+                            })
+                                
+                           html +=  `</tbody>
+                        
+                        </table>
+
+                        <p class="text-end">Total pagar: <span class="fw-bold">$${total}</span></p>
+                        <button class="btn btn-dark w-100 mt-3 p-2">Vaciar Carrito</button>`
+    div.innerHTML = html
+    if (carrito.length === 0){
+        carritocontainer.innerHTML = ''
+        carritocontainer.appendChild(p)
+    } else {
+        carritocontainer.innerHTML = ''
+        carritocontainer.appendChild(div)
+    }
+}
 const createCard = (guitar) => {
     const div = document.createElement('div')
     div.className = 'col-md-6 col-lg-4 my-4 row align-items-center'
@@ -52,10 +120,35 @@ const createCard = (guitar) => {
 const buttonClicked = (e) => {
     if (e.target.classList.contains('btn')){
         const dataId = e.target.getAttribute('data-id')
-    console.log(db [Number(dataId) - 1])
+        // Verificar si existe guitar en el carrito
+        const idCarrito = carrito.findIndex(g => g.id === Number(dataId))
+        // Si no, crea un objeto nuevo
+        if (idCarrito === -1){
+            carrito.push({
+                ...db [Number(dataId) - 1],
+                cantidad: 1
+            })
+        } else {
+            // Si sí, aumenta la cantidad
+            carrito[idCarrito].cantidad++
+        }
+
+        /*carrito.push({
+            ...db [Number(dataId) - 1],
+            cantidad: 1
+        })*/
+        createCart(carrito)
+
+        
     }
 }
-
+const carritoClicked = (e) => {
+    if (e.target.classList.contains('btn')){
+        const btn = e.target.innerText
+        console.log(btn)
+    }
+    
+}
 /*
     const idGuitar = 
     const indexdb= db.findIndex(guitar => guitar.id === Number (idGuitar))
@@ -92,5 +185,7 @@ const createDiv = (guitar) => {
 db.forEach( guitar => {
     divContainer.appendChild(createCard(guitar) );
 })
+createCart(carrito)
 
 divContainer.addEventListener('click', buttonClicked)
+carritocontainer.addEventListener('click', carritoClicked)
