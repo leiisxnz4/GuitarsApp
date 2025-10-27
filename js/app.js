@@ -30,13 +30,13 @@ let carrito = []
 
 const divContainer = document.querySelector('main div');
 const carritocontainer = document.querySelector('#carrito');
-
+const btnVai = document.querySelector('#vai')
 
 const createCart = (carrito) => {
     console.log(carrito)
     const p = document.createElement('p')
     p.className = 'text-center'
-    p.inertertext = 'El carrito está vacío'
+    p.innerText = 'El carrito está vacío'
     const div = document.createElement('div')
     let total = 0
     let html = `<table class="w-100 table">
@@ -56,7 +56,7 @@ const createCart = (carrito) => {
                                     <td>
                                         <img class="img-fluid" src="./img/${ g.imagen }.jpg" alt="imagen guitarra">
                                     </td>
-                                    <td>SRV</td>
+                                    <td>${g.nombre}</td>
                                     <td class="fw-bold">
                                             $${ g.precio}
                                     </td>
@@ -137,10 +137,11 @@ const buttonClicked = (e) => {
             cantidad: 1
         })*/
         createCart(carrito)
-
+        setLocalStorage()
         
     }
 }
+
 const carritoClicked = (e) => {
     if (e.target.classList.contains('btn')){
         const btn = e.target.innerText
@@ -162,9 +163,24 @@ const carritoClicked = (e) => {
         }else if (btn === 'Vaciar Carrito'.toUpperCase()){
             carrito = []
         }
+        setLocalStorage()
         createCart(carrito)
     }
 }
+
+const getLocalStorage = () => {
+    const carritoStorage = localStorage.getItem('carrito')
+    if (carritoStorage){
+        carrito = JSON.parse(carritoStorage)
+    } else {
+        carrito = []
+    }
+}
+
+const setLocalStorage = () => {
+    localStorage.setItem('carrito', JSON.stringify(carrito))
+}
+
 /*
     const idGuitar = 
     const indexdb= db.findIndex(guitar => guitar.id === Number (idGuitar))
@@ -201,7 +217,10 @@ const createDiv = (guitar) => {
 db.forEach( guitar => {
     divContainer.appendChild(createCard(guitar) );
 })
+
+getLocalStorage()
 createCart(carrito)
 
 divContainer.addEventListener('click', buttonClicked)
 carritocontainer.addEventListener('click', carritoClicked)
+btnVai.addEventListener('click', buttonClicked)
